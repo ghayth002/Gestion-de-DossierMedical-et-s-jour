@@ -31,11 +31,6 @@ class SejourController extends AbstractController
     ): Response
     {
         $sejour = new Sejour();
-        
-        // Hardcoded ID - replace with actual ID from your database
-        $dossierMedicale = $dossierMedicaleRepository->find(1); // Assuming ID 1 exists
-        $sejour->setDossierMedicale($dossierMedicale);
-        
         $form = $this->createForm(SejourType::class, $sejour);
         $form->handleRequest($request);
 

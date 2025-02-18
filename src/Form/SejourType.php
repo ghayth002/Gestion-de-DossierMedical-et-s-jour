@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Sejour;
 use App\Entity\DossierMedicale;
+use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
@@ -15,6 +16,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\GreaterThan;
 use Symfony\Component\Validator\Constraints\PositiveOrZero;
+use Doctrine\ORM\EntityRepository;
 
 class SejourType extends AbstractType
 {
@@ -82,9 +84,23 @@ class SejourType extends AbstractType
             ])
             ->add('dossierMedicale', EntityType::class, [
                 'class' => DossierMedicale::class,
-                'choice_label' => 'id',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('d')
+                        ->orderBy('d.dateDeCreation', 'DESC');
+                },
+                'choice_label' => function (DossierMedicale $dossier) {
+                    return sprintf(
+                        '#%d - %s %s',
+                        $dossier->getId(),
+                        $dossier->getPatient()->getNomUser(),
+                        $dossier->getPatient()->getPrenomUser()
+                    );
+                },
                 'constraints' => [
                     new NotBlank(['message' => 'Le dossier médical est requis']),
+                ],
+                'attr' => [
+                    'class' => 'select-custom',
                 ],
             ])
         ;

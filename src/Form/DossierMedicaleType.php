@@ -3,9 +3,7 @@
 namespace App\Form;
 
 use App\Entity\DossierMedicale;
-use App\Entity\Patient;
-use App\Entity\Medecin;
-use App\Entity\ResponsableAdministratif;
+use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
@@ -17,6 +15,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\File;
+use Doctrine\ORM\EntityRepository;
 
 class DossierMedicaleType extends AbstractType
 {
@@ -68,31 +67,46 @@ class DossierMedicaleType extends AbstractType
                 ],
             ])
             ->add('patient', EntityType::class, [
-                'class' => Patient::class,
-                'choice_label' => function ($patient) {
-                    return $patient->getNom() . ' ' . $patient->getPrenom();
+                'class' => User::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('u')
+                        ->where('u.roles LIKE :role')
+                        ->setParameter('role', '%ROLE_PATIENT%')
+                        ->orderBy('u.nomUser', 'ASC')
+                        ->addOrderBy('u.prenomUser', 'ASC');
                 },
+                'choice_label' => function (User $user) {
+                    return sprintf('%s %s', $user->getNomUser(), $user->getPrenomUser());
+                },
+                'placeholder' => 'Sélectionner un patient',
+                'required' => true,
                 'constraints' => [
                     new NotBlank(['message' => 'Le patient est requis']),
                 ],
+                'attr' => [
+                    'class' => 'select-custom',
+                ]
             ])
             ->add('medecin', EntityType::class, [
-                'class' => Medecin::class,
-                'choice_label' => function ($medecin) {
-                    return $medecin->getNom() . ' ' . $medecin->getPrenom();
+                'class' => User::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('u')
+                        ->where('u.roles LIKE :role')
+                        ->setParameter('role', '%ROLE_MEDECIN%')
+                        ->orderBy('u.nomUser', 'ASC')
+                        ->addOrderBy('u.prenomUser', 'ASC');
                 },
+                'choice_label' => function (User $user) {
+                    return sprintf('%s %s', $user->getNomUser(), $user->getPrenomUser());
+                },
+                'placeholder' => 'Sélectionner un médecin',
+                'required' => true,
                 'constraints' => [
                     new NotBlank(['message' => 'Le médecin est requis']),
                 ],
-            ])
-            ->add('responsableAdministratif', EntityType::class, [
-                'class' => ResponsableAdministratif::class,
-                'choice_label' => function ($responsable) {
-                    return $responsable->getNom() . ' ' . $responsable->getPrenom();
-                },
-                'constraints' => [
-                    new NotBlank(['message' => 'Le responsable administratif est requis']),
-                ],
+                'attr' => [
+                    'class' => 'select-custom',
+                ]
             ])
         ;
     }

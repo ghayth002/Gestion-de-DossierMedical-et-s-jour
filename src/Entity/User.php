@@ -9,11 +9,12 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\Table(name: '`user`')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(name: "Id_User")]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
@@ -27,11 +28,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
-    private ?Patient $patient = null;
+    #[ORM\Column(length: 255, name: "Nom_User")]
+    #[Assert\NotBlank(message: 'Le nom est requis')]
+    private ?string $nomUser = null;
 
-    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
-    private ?Medecin $medecin = null;
+    #[ORM\Column(length: 255, name: "Prenom_User")]
+    #[Assert\NotBlank(message: 'Le prénom est requis')]
+    private ?string $prenomUser = null;
+
+    #[ORM\Column(length: 20, name: "Num_Telephone")]
+    #[Assert\NotBlank(message: 'Le numéro de téléphone est requis')]
+    private ?string $numTelephone = null;
+
+    #[ORM\Column(length: 1)]
+    #[Assert\Choice(choices: ['M', 'F'], message: 'Le sexe doit être M ou F')]
+    private ?string $sexe = null;
+
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'L\'adresse est requise')]
+    private ?string $addresse = null;
+
+    #[ORM\Column(type: "date", name: "Date_Naissance")]
+    #[Assert\NotBlank(message: 'La date de naissance est requise')]
+    private ?\DateTimeInterface $dateNaissance = null;
 
     public function getId(): ?int
     {
@@ -100,45 +119,69 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    public function getPatient(): ?Patient
+    public function getNomUser(): ?string
     {
-        return $this->patient;
+        return $this->nomUser;
     }
 
-    public function setPatient(?Patient $patient): static
+    public function setNomUser(string $nomUser): static
     {
-        // unset the owning side of the relation if necessary
-        if ($patient === null && $this->patient !== null) {
-            $this->patient->setUser(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if ($patient !== null && $patient->getUser() !== $this) {
-            $patient->setUser($this);
-        }
-
-        $this->patient = $patient;
+        $this->nomUser = $nomUser;
         return $this;
     }
 
-    public function getMedecin(): ?Medecin
+    public function getPrenomUser(): ?string
     {
-        return $this->medecin;
+        return $this->prenomUser;
     }
 
-    public function setMedecin(?Medecin $medecin): static
+    public function setPrenomUser(string $prenomUser): static
     {
-        // unset the owning side of the relation if necessary
-        if ($medecin === null && $this->medecin !== null) {
-            $this->medecin->setUser(null);
-        }
+        $this->prenomUser = $prenomUser;
+        return $this;
+    }
 
-        // set the owning side of the relation if necessary
-        if ($medecin !== null && $medecin->getUser() !== $this) {
-            $medecin->setUser($this);
-        }
+    public function getNumTelephone(): ?string
+    {
+        return $this->numTelephone;
+    }
 
-        $this->medecin = $medecin;
+    public function setNumTelephone(string $numTelephone): static
+    {
+        $this->numTelephone = $numTelephone;
+        return $this;
+    }
+
+    public function getSexe(): ?string
+    {
+        return $this->sexe;
+    }
+
+    public function setSexe(string $sexe): static
+    {
+        $this->sexe = $sexe;
+        return $this;
+    }
+
+    public function getAddresse(): ?string
+    {
+        return $this->addresse;
+    }
+
+    public function setAddresse(string $addresse): static
+    {
+        $this->addresse = $addresse;
+        return $this;
+    }
+
+    public function getDateNaissance(): ?\DateTimeInterface
+    {
+        return $this->dateNaissance;
+    }
+
+    public function setDateNaissance(\DateTimeInterface $dateNaissance): static
+    {
+        $this->dateNaissance = $dateNaissance;
         return $this;
     }
 } 

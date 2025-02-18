@@ -45,12 +45,12 @@ class Service
     /**
      * @var Collection<int, Consultation>
      */
-    #[ORM\OneToMany(targetEntity: Consultation::class, mappedBy: 'Service')]
-    private Collection $status;
+    #[ORM\OneToMany(targetEntity: Consultation::class, mappedBy: 'service')]
+    private Collection $consultations;
 
     public function __construct()
     {
-        $this->status = new ArrayCollection();
+        $this->consultations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -97,27 +97,27 @@ class Service
     /**
      * @return Collection<int, Consultation>
      */
-    public function getStatus(): Collection
+    public function getConsultations(): Collection
     {
-        return $this->status;
+        return $this->consultations;
     }
 
-    public function addStatus(Consultation $status): static
+    public function addConsultation(Consultation $consultation): static
     {
-        if (!$this->status->contains($status)) {
-            $this->status->add($status);
-            $status->setService($this);
+        if (!$this->consultations->contains($consultation)) {
+            $this->consultations->add($consultation);
+            $consultation->setService($this);
         }
 
         return $this;
     }
 
-    public function removeStatus(Consultation $status): static
+    public function removeConsultation(Consultation $consultation): static
     {
-        if ($this->status->removeElement($status)) {
+        if ($this->consultations->removeElement($consultation)) {
             // set the owning side to null (unless already changed)
-            if ($status->getService() === $this) {
-                $status->setService(null);
+            if ($consultation->getService() === $this) {
+                $consultation->setService(null);
             }
         }
 

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Sejour;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -37,5 +38,19 @@ class SejourRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    /**
+     * Find all stays for a given patient
+     */
+    public function findByPatient(User $patient): array
+    {
+        return $this->createQueryBuilder('s')
+            ->join('s.dossierMedicale', 'd')
+            ->where('d.patient = :patient')
+            ->setParameter('patient', $patient)
+            ->orderBy('s.dateEntree', 'DESC')
+            ->getQuery()
+            ->getResult();
     }
 } 

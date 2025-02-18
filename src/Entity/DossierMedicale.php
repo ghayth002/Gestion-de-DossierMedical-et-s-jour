@@ -41,17 +41,13 @@ class DossierMedicale
     #[ORM\OneToMany(mappedBy: 'dossierMedicale', targetEntity: Sejour::class, orphanRemoval: true)]
     private Collection $sejours;
 
-    #[ORM\ManyToOne(inversedBy: 'dossierMedicales')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Patient $patient = null;
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(name: "patient_id", referencedColumnName: "Id_User", nullable: false)]
+    private ?User $patient = null;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Medecin $medecin = null;
-
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?ResponsableAdministratif $responsableAdministratif = null;
+    #[ORM\JoinColumn(name: "medecin_id", referencedColumnName: "Id_User", nullable: false)]
+    private ?User $medecin = null;
 
     public function __construct()
     {
@@ -170,36 +166,25 @@ class DossierMedicale
         return $this;
     }
 
-    public function getPatient(): ?Patient
+    public function getPatient(): ?User
     {
         return $this->patient;
     }
 
-    public function setPatient(?Patient $patient): static
+    public function setPatient(?User $patient): static
     {
         $this->patient = $patient;
         return $this;
     }
 
-    public function getMedecin(): ?Medecin
+    public function getMedecin(): ?User
     {
         return $this->medecin;
     }
 
-    public function setMedecin(?Medecin $medecin): static
+    public function setMedecin(?User $medecin): static
     {
         $this->medecin = $medecin;
-        return $this;
-    }
-
-    public function getResponsableAdministratif(): ?ResponsableAdministratif
-    {
-        return $this->responsableAdministratif;
-    }
-
-    public function setResponsableAdministratif(?ResponsableAdministratif $responsableAdministratif): static
-    {
-        $this->responsableAdministratif = $responsableAdministratif;
         return $this;
     }
 } 

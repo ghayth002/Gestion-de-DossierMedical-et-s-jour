@@ -7,7 +7,7 @@
             <h4 class="header-title">{{ button_label is defined ? 'Modifier le dossier médical' : 'Nouveau dossier médical' }}</h4>
             <p class="header-subtitle">Veuillez remplir les informations du dossier médical</p>
         </div>
-    </div>
+                    </div>
 
     <div class="form-body">
         <div class="form-grid">
@@ -34,7 +34,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                    </div>
 
                 <!-- Medical Staff Section -->
                 <div class="form-section">
@@ -55,21 +55,9 @@
                                 {{ form_label(form.medecin, null, {'label_attr': {'class': 'active'}}) }}
                                 {{ form_errors(form.medecin, {'attr': {'class': 'error-message'}}) }}
                             </div>
-
-                            <div class="input-field with-icon">
-                                <i class="material-icons prefix">admin_panel_settings</i>
-                                {{ form_widget(form.responsableAdministratif, {
-                                    'attr': {
-                                        'class': 'select-custom',
-                                        'placeholder': 'Sélectionner un responsable'
-                                    }
-                                }) }}
-                                {{ form_label(form.responsableAdministratif, null, {'label_attr': {'class': 'active'}}) }}
-                                {{ form_errors(form.responsableAdministratif, {'attr': {'class': 'error-message'}}) }}
-                            </div>
                         </div>
-                    </div>
                 </div>
+            </div>
 
                 <!-- File Status Section -->
                 <div class="form-section">
@@ -89,7 +77,7 @@
                                 }) }}
                                 {{ form_label(form.dateDeCreation, null, {'label_attr': {'class': 'active'}}) }}
                                 {{ form_errors(form.dateDeCreation, {'attr': {'class': 'error-message'}}) }}
-                            </div>
+                    </div>
 
                             <div class="input-field with-icon">
                                 <i class="material-icons prefix">assignment</i>
@@ -104,7 +92,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                    </div>
 
                 <!-- Documents Section -->
                 <div class="form-section">
@@ -113,14 +101,14 @@
                         <h5>Documents</h5>
                     </div>
                     <div class="section-content">
-                        <div class="file-field input-field">
-                            <div class="btn primary waves-effect">
+                    <div class="file-field input-field">
+                        <div class="btn primary waves-effect">
                                 <span><i class="material-icons left">cloud_upload</i>Choisir</span>
-                                {{ form_widget(form.imageFile) }}
-                            </div>
-                            <div class="file-path-wrapper">
-                                <input class="file-path validate" type="text" placeholder="Télécharger une image">
-                            </div>
+                            {{ form_widget(form.imageFile) }}
+                        </div>
+                        <div class="file-path-wrapper">
+                            <input class="file-path validate" type="text" placeholder="Télécharger une image">
+                        </div>
                             {{ form_errors(form.imageFile, {'attr': {'class': 'error-message'}}) }}
                         </div>
                     </div>
@@ -196,10 +184,10 @@
                 <i class="material-icons left">arrow_back</i>
                 Retour
             </a>
-            <button class="btn primary waves-effect waves-light" type="submit">
-                <i class="material-icons left">save</i>
-                {{ button_label|default('Enregistrer') }}
-            </button>
+        <button class="btn primary waves-effect waves-light" type="submit">
+            <i class="material-icons left">save</i>
+            {{ button_label|default('Enregistrer') }}
+        </button>
         </div>
     </div>
 {{ form_end(form) }}
@@ -527,7 +515,7 @@
         }
 
         .form-section.full-height {
-            height: auto;
+        height: auto;
         }
     }
 
@@ -592,7 +580,7 @@
     .select-custom:hover, .datepicker-custom:hover, .custom-textarea:hover {
         border-color: var(--primary-light);
     }
-</style>
+</style> 
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {

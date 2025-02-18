@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Gestion des Dossiers Médicaux{% endblock %}
+{% block title %}Liste des Dossiers Médicaux{% endblock %}
 
 {% block body %}
 <div class="container">
@@ -24,7 +24,7 @@
                 <div class="card-content">
                     <span class="card-title">
                         <i class="material-icons">list</i>
-                        Liste des Dossiers
+                        Liste des Dossiers Médicaux
                     </span>
 
                     {% if dossier_medicales is empty %}
@@ -42,52 +42,55 @@
                                 <tr>
                                     <th><i class="material-icons tiny">tag</i> ID</th>
                                     <th><i class="material-icons tiny">person</i> Patient</th>
-                                    <th><i class="material-icons tiny">event</i> Date de création</th>
-                                    <th><i class="material-icons tiny">verified</i> Statut</th>
                                     <th><i class="material-icons tiny">medical_services</i> Médecin</th>
+                                    <th><i class="material-icons tiny">event</i> Date de création</th>
+                                    <th><i class="material-icons tiny">info</i> Statut</th>
                                     <th><i class="material-icons tiny">more_vert</i> Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                            {% for dossier in dossier_medicales %}
+                            {% for dossier_medicale in dossier_medicales %}
                                 <tr class="animate-fade-up" style="animation-delay: {{ loop.index * 0.1 }}s">
-                                    <td>#{{ dossier.id }}</td>
+                                    <td>#{{ dossier_medicale.id }}</td>
                                     <td>
                                         <div class="patient-info">
                                             <i class="material-icons tiny">person</i>
-                                            {{ dossier.patient.nom }} {{ dossier.patient.prenom }}
+                                            {{ dossier_medicale.patient.nomUser }} {{ dossier_medicale.patient.prenomUser }}
                                         </div>
-                                    </td>
-                                    <td>{{ dossier.dateDeCreation ? dossier.dateDeCreation|date('d/m/Y') : '' }}</td>
-                                    <td>
-                                        <span class="status-badge {{ dossier.statutDossier == 'Actif' ? 'status-success' : 'status-warning' }}">
-                                            <i class="material-icons tiny">{{ dossier.statutDossier == 'Actif' ? 'check_circle' : 'pending' }}</i>
-                                            {{ dossier.statutDossier }}
-                                        </span>
                                     </td>
                                     <td>
                                         <div class="doctor-info">
                                             <i class="material-icons tiny">medical_services</i>
-                                            Dr. {{ dossier.medecin.nom }} {{ dossier.medecin.prenom }}
+                                            {{ dossier_medicale.medecin.nomUser }} {{ dossier_medicale.medecin.prenomUser }}
                                         </div>
+                                    </td>
+                                    <td>{{ dossier_medicale.dateDeCreation ? dossier_medicale.dateDeCreation|date('d/m/Y') : '' }}</td>
+                                    <td>
+                                        <span class="status-badge {{ dossier_medicale.statutDossier == 'Actif' ? 'status-success' : 'status-warning' }}">
+                                            <i class="material-icons tiny">
+                                                {% if dossier_medicale.statutDossier == 'Actif' %}check_circle
+                                                {% else %}warning{% endif %}
+                                            </i>
+                                            {{ dossier_medicale.statutDossier }}
+                                        </span>
                                     </td>
                                     <td class="actions-cell">
                                         <div class="action-buttons">
-                                            <a href="{{ path('app_dossier_medicale_show', {'id': dossier.id}) }}" 
+                                            <a href="{{ path('app_dossier_medicale_show', {'id': dossier_medicale.id}) }}" 
                                                class="btn-floating waves-effect waves-light blue tooltipped"
                                                data-position="top"
                                                data-tooltip="Voir les détails">
                                                 <i class="material-icons">visibility</i>
                                             </a>
-                                            <a href="{{ path('app_dossier_medicale_edit', {'id': dossier.id}) }}" 
+                                            <a href="{{ path('app_dossier_medicale_edit', {'id': dossier_medicale.id}) }}" 
                                                class="btn-floating waves-effect waves-light orange tooltipped"
                                                data-position="top"
                                                data-tooltip="Modifier">
                                                 <i class="material-icons">edit</i>
                                             </a>
-                                            <form method="post" action="{{ path('app_dossier_medicale_delete', {'id': dossier.id}) }}" style="display: inline-block" 
+                                            <form method="post" action="{{ path('app_dossier_medicale_delete', {'id': dossier_medicale.id}) }}" style="display: inline-block" 
                                                   onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce dossier ?');">
-                                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ dossier.id) }}">
+                                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ dossier_medicale.id) }}">
                                                 <button type="submit" class="btn-floating waves-effect waves-light red tooltipped"
                                                         data-position="top"
                                                         data-tooltip="Supprimer">
@@ -149,6 +152,27 @@
         line-height: 35px;
     }
 
+    /* Status badges */
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: 1rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+
+    .status-warning {
+        background-color: #fff8e1;
+        color: #f57c00;
+    }
+
+    .status-success {
+        background-color: #e8f5e9;
+        color: #388e3c;
+    }
+
     /* Enhanced Empty State */
     .center-align.grey-text {
         padding: 3rem 0;
@@ -164,5 +188,52 @@
         font-size: 1.1rem;
         color: #78909c;
     }
+
+    /* Animation */
+    .animate-fade-up {
+        animation: fadeUp 0.5s ease-out;
+    }
+
+    @keyframes fadeUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Responsive table adjustments */
+    @media screen and (max-width: 992px) {
+        .responsive-table {
+            font-size: 0.9rem;
+        }
+        
+        .status-badge {
+            font-size: 0.8rem;
+            padding: 0.2rem 0.5rem;
+        }
+        
+        .action-buttons .btn-floating {
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+        }
+        
+        .action-buttons .btn-floating i {
+            font-size: 1rem;
+            line-height: 30px;
+        }
+    }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize tooltips
+    var tooltips = document.querySelectorAll('.tooltipped');
+    M.Tooltip.init(tooltips);
+});
+</script>
 {% endblock %} 

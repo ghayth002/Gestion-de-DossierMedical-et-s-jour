@@ -54,8 +54,8 @@
                     <span class="card-title">Dossier Médical Associé</span>
                     <p>
                         <strong>Numéro de dossier:</strong> #{{ sejour.dossierMedicale.id }}<br>
-                        <strong>Patient:</strong> {{ sejour.dossierMedicale.patient.nom }} {{ sejour.dossierMedicale.patient.prenom }}<br>
-                        <strong>Médecin traitant:</strong> Dr. {{ sejour.dossierMedicale.medecin.nom }} {{ sejour.dossierMedicale.medecin.prenom }}
+                        <strong>Patient:</strong> {{ sejour.dossierMedicale.patient.nomUser }} {{ sejour.dossierMedicale.patient.prenomUser }}<br>
+                        <strong>Médecin traitant:</strong> Dr. {{ sejour.dossierMedicale.medecin.nomUser }} {{ sejour.dossierMedicale.medecin.prenomUser }}
                     </p>
                     <div class="card-action">
                         <a href="{{ path('app_front_office_dossier_show', {'id': sejour.dossierMedicale.id}) }}" class="blue-text">
