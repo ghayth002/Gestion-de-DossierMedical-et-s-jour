@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Séjour{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1>Détails du Séjour</h1>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Informations du patient</h5>
+                <p class="card-text">
+                    <strong>Nom:</strong> {{ sejour.dossierMedicale.patient.nom }} {{ sejour.dossierMedicale.patient.prenom }}<br>
+                    <strong>Dossier médical:</strong> #{{ sejour.dossierMedicale.id }}
+                </p>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Informations du séjour</h5>
+                <p class="card-text">
+                    <strong>Date d'entrée:</strong> {{ sejour.dateEntree|date('d/m/Y H:i') }}<br>
+                    <strong>Date de sortie:</strong> {{ sejour.dateSortie|date('d/m/Y H:i') }}<br>
+                    <strong>Type de séjour:</strong> {{ sejour.typeSejour }}
+                </p>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Informations de paiement</h5>
+                <p class="card-text">
+                    <strong>Frais de séjour:</strong> {{ sejour.fraisSejour }} €<br>
+                    <strong>Prix extras:</strong> {{ sejour.prixExtras ?? '0' }} €<br>
+                    <strong>Moyen de paiement:</strong> {{ sejour.moyenPaiement }}<br>
+                    <strong>Statut du paiement:</strong> {{ sejour.statutPaiement }}
+                </p>
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <a href="{{ path('app_sejour_index') }}" class="btn btn-secondary">Retour à la liste</a>
+            {% if is_granted('ROLE_MEDECIN') %}
+                <a href="{{ path('app_sejour_edit', {'id': sejour.id}) }}" class="btn btn-warning">Modifier</a>
+                <form method="post" action="{{ path('app_sejour_delete', {'id': sejour.id}) }}" style="display: inline-block" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce séjour ?');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ sejour.id) }}">
+                    <button class="btn btn-danger">Supprimer</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %} 

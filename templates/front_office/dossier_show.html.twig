@@ -1,0 +1,162 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Dossier Médical{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col s12">
+            <a href="{{ path('app_front_office_dashboard') }}" class="btn-floating btn-large waves-effect waves-light blue tooltipped" data-position="right" data-tooltip="Retour au tableau de bord">
+                <i class="material-icons">arrow_back</i>
+            </a>
+            <h3 class="header">
+                <i class="material-icons left" style="font-size: 2.5rem;">folder_shared</i>
+                Mon Dossier Médical
+            </h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col s12 m6">
+            <div class="card animate-fade-up">
+                <div class="card-content">
+                    <span class="card-title">
+                        <i class="material-icons">info</i>
+                        Informations Générales
+                    </span>
+                    <div class="info-list">
+                        <p>
+                            <i class="material-icons tiny">event</i>
+                            <strong>Date de création:</strong> {{ dossier.dateDeCreation|date('d/m/Y') }}
+                        </p>
+                        <p>
+                            <i class="material-icons tiny">verified</i>
+                            <strong>Statut:</strong> 
+                            <span class="status-badge {{ dossier.statutDossier == 'Actif' ? 'status-success' : 'status-warning' }}">
+                                <i class="material-icons tiny">{{ dossier.statutDossier == 'Actif' ? 'check_circle' : 'pending' }}</i>
+                                {{ dossier.statutDossier }}
+                            </span>
+                        </p>
+                        <p>
+                            <i class="material-icons tiny">person</i>
+                            <strong>Médecin traitant:</strong> Dr. {{ dossier.medecin.nom }} {{ dossier.medecin.prenom }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col s12 m6">
+            <div class="card animate-fade-up" style="animation-delay: 0.1s;">
+                <div class="card-content">
+                    <span class="card-title">
+                        <i class="material-icons">history</i>
+                        Historique Médical
+                    </span>
+                    <div class="history-section">
+                        <h6 class="blue-text">
+                            <i class="material-icons tiny">sick</i>
+                            Maladies:
+                        </h6>
+                        <p>{{ dossier.historiqueDesMaladies|nl2br ?: 'Aucun historique enregistré' }}</p>
+                        
+                        <h6 class="blue-text">
+                            <i class="material-icons tiny">medical_services</i>
+                            Opérations:
+                        </h6>
+                        <p>{{ dossier.operationsPassees|nl2br ?: 'Aucune opération enregistrée' }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if dossier.image %}
+    <div class="row">
+        <div class="col s12">
+            <div class="card animate-fade-up" style="animation-delay: 0.2s;">
+                <div class="card-content">
+                    <span class="card-title">
+                        <i class="material-icons">image</i>
+                        Documents Médicaux
+                    </span>
+                    <div class="medical-image-container">
+                        <img src="{{ asset('uploads/dossiers/' ~ dossier.image) }}" 
+                             alt="Document médical" 
+                             class="medical-image">
+                        <div class="medical-image-overlay">
+                            <a href="{{ asset('uploads/dossiers/' ~ dossier.image) }}" 
+                               target="_blank"
+                               class="btn-floating waves-effect waves-light blue tooltipped"
+                               data-position="top"
+                               data-tooltip="Voir l'image en taille réelle">
+                                <i class="material-icons">zoom_in</i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="row">
+        <div class="col s12">
+            <div class="card animate-fade-up" style="animation-delay: 0.3s;">
+                <div class="card-content">
+                    <span class="card-title">
+                        <i class="material-icons">event_note</i>
+                        Mes Séjours
+                    </span>
+                    {% if sejours is empty %}
+                        <div class="center-align grey-text">
+                            <i class="material-icons large">hotel</i>
+                            <p>Aucun séjour enregistré pour ce dossier.</p>
+                        </div>
+                    {% else %}
+                        <table class="striped responsive-table">
+                            <thead>
+                                <tr>
+                                    <th><i class="material-icons tiny">event</i> Date d'entrée</th>
+                                    <th><i class="material-icons tiny">event_available</i> Date de sortie</th>
+                                    <th><i class="material-icons tiny">local_hospital</i> Type</th>
+                                    <th><i class="material-icons tiny">payment</i> Statut paiement</th>
+                                    <th><i class="material-icons tiny">more_vert</i> Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for sejour in sejours %}
+                                    <tr class="animate-fade-up" style="animation-delay: {{ loop.index * 0.1 }}s">
+                                        <td>{{ sejour.dateEntree|date('d/m/Y H:i') }}</td>
+                                        <td>{{ sejour.dateSortie|date('d/m/Y H:i') }}</td>
+                                        <td>
+                                            <span class="chip">
+                                                <i class="material-icons tiny">{{ sejour.typeSejour == 'Hospitalisation' ? 'hotel' : 'medical_services' }}</i>
+                                                {{ sejour.typeSejour }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="status-badge {{ sejour.statutPaiement == 'Payé' ? 'status-success' : 'status-warning' }}">
+                                                <i class="material-icons tiny">{{ sejour.statutPaiement == 'Payé' ? 'check_circle' : 'pending' }}</i>
+                                                {{ sejour.statutPaiement }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <a href="{{ path('app_front_office_sejour_show', {'id': sejour.id}) }}" 
+                                               class="btn-floating waves-effect waves-light blue tooltipped"
+                                               data-position="left"
+                                               data-tooltip="Voir les détails">
+                                                <i class="material-icons">visibility</i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
