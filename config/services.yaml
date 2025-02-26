@@ -1,0 +1,6 @@
+parameters:
+    router.request_context.host: '%env(ROUTER_HOST)%'
+    router.request_context.scheme: '%env(ROUTER_SCHEME)%'
+
+services:
+    # ... rest of your services configuration ... 
